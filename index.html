@@ -37,13 +37,16 @@
   <footer><span>© LITTLE LINKS 2024</span><span>MADE WITH <span class="heart">♥</span> & A LITTLE PERSONALITY</span><a href="#top" id="backTop">BACK TO TOP ↑</a></footer>
 
   <dialog id="setupDialog" aria-labelledby="setupTitle">
-    <div class="dialog-header"><div><p class="modal-kicker">ONE-TIME SETUP</p><h2 id="setupTitle">Connect your database</h2></div><button class="icon-button" id="closeSetup" aria-label="Close setup">×</button></div>
-    <p class="login-description">Connect Upstash Redis through Vercel so your published changes are saved for everyone.</p>
-    <a class="setup-connect" href="https://vercel.com/marketplace/upstash" target="_blank" rel="noopener noreferrer">Connect Upstash on Vercel ↗</a>
-    <ol class="setup-steps"><li>In Vercel, add Upstash and connect a Redis database to this project and environment.</li><li>In project settings, add <code>ADMIN_PASSWORD</code> and a separate <code>SESSION_SECRET</code> of at least 32 characters.</li><li>Redeploy your project, then return here and check setup.</li></ol>
-    <p class="setup-hint">Vercel may ask you to sign in, approve the integration, or choose a plan. Database credentials stay in Vercel.</p>
+    <div class="dialog-header"><div><p class="modal-kicker">ONE-TIME SETUP</p><h2 id="setupTitle">Finish setup</h2></div><button class="icon-button" id="closeSetup" aria-label="Close setup">×</button></div>
+    <p class="login-description">Before you can edit this page, three things must be set in your Vercel project.</p>
+    <ul class="setup-steps" id="setupList">
+      <li data-setting="DATABASE"><strong>Database</strong><span class="setup-todo">Add a free Turso database to this project. Vercel fills in the connection for you.<a class="setup-connect" href="https://vercel.com/marketplace/tursocloud" target="_blank" rel="noopener noreferrer">Connect Turso on Vercel ↗</a></span><span class="setup-ok">Connected</span></li>
+      <li data-setting="ADMIN_PASSWORD"><strong><code>ADMIN_PASSWORD</code></strong><span class="setup-todo">Add this environment variable. Its value is your sign-in password.</span><span class="setup-ok">Added</span></li>
+      <li data-setting="SESSION_SECRET"><strong><code>SESSION_SECRET</code></strong><span class="setup-todo">Add this environment variable. Its value is any random text, 32 characters or more.</span><span class="setup-ok">Added</span></li>
+    </ul>
+    <p class="setup-hint">Add variables in Vercel: your project → Settings → Environment Variables. Then redeploy and check again.</p>
     <p class="form-error" id="setupError" role="status" aria-live="polite"></p>
-    <button class="save-button login-submit" id="checkSetup" type="button">I've finished setup</button>
+    <button class="save-button login-submit" id="checkSetup" type="button">Check again</button>
   </dialog>
   <dialog id="loginDialog">
     <div class="dialog-header"><div><p class="modal-kicker">WELCOME BACK</p><h2>Admin sign in</h2></div><button class="icon-button" id="closeLogin" aria-label="Close sign in">×</button></div>

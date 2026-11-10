@@ -39,11 +39,12 @@ function openEditor(){
  $('editor').showModal();
 }
 function toast(message){ $('toast').textContent=message; $('toast').classList.add('visible'); clearTimeout(toast.timer); toast.timer=setTimeout(()=>$('toast').classList.remove('visible'),3500); }
-async function api(url, options={}) { const response=await fetch(url, {cache:'no-store', ...options}); let data; try { data=await response.json(); } catch { throw new Error('The server returned an unexpected response.'); } if (!response.ok) { const error=new Error(data.error || 'Something went wrong.'); error.code=data.code; throw error; } return data; }
+async function api(url, options={}) { const response=await fetch(url, {cache:'no-store', ...options}); let data; try { data=await response.json(); } catch { throw new Error('The server returned an unexpected response.'); } if (!response.ok) { const error=new Error(data.error || 'Something went wrong.'); error.code=data.code; error.missing=data.missing; throw error; } return data; }
 async function loadProfile(){ try { const data=await api('/api/profile'); if(data.profile) profile=data.profile; render(); } catch { render(); } }
+function showSetup(missing){ const todo=Array.isArray(missing) ? missing : ['DATABASE','ADMIN_PASSWORD','SESSION_SECRET']; document.querySelectorAll('#setupList li').forEach(item=>item.classList.toggle('done',!todo.includes(item.dataset.setting))); }
 async function beginAdmin(fromSetup=false){
  try { const session=await api('/api/session'); if(fromSetup) $('setupDialog').close(); if(session.authenticated) { await loadProfile(); openEditor(); } else { $('loginError').textContent=''; $('loginForm').reset(); $('loginDialog').showModal(); } }
- catch(error){ if(error.code==='NOT_CONFIGURED') { if(fromSetup) $('setupError').textContent='Setup is still incomplete. Check the project environment variables and redeploy.'; else { $('setupError').textContent=''; $('setupDialog').showModal(); } } else if(fromSetup) $('setupError').textContent=error.message; else toast(error.message); }
+ catch(error){ if(error.code==='NOT_CONFIGURED') { showSetup(error.missing); if(fromSetup) $('setupError').textContent='Setup is still incomplete. Add what is missing above, then redeploy.'; else { $('setupError').textContent=''; $('setupDialog').showModal(); } } else if(fromSetup) $('setupError').textContent=error.message; else toast(error.message); }
 }
 $('editButton').addEventListener('click',()=>beginAdmin());
 $('closeSetup').addEventListener('click',()=>$('setupDialog').close());
