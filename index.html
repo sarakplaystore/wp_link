@@ -16,7 +16,7 @@
   <header class="topbar">
     <a class="brand" href="/" aria-label="Little Links home"><span class="brand-mark">✳</span> littlelinks<span class="brand-dot">.</span></a>
     <span class="top-caption">A LITTLE SPACE ON THE INTERNET</span>
-    <button class="edit-trigger" id="editButton"><span>✎</span> Customize page</button>
+    <button class="edit-trigger" id="editButton"><span>✎</span> Admin</button>
   </header>
 
   <main class="page-shell">
@@ -36,14 +36,20 @@
   </main>
   <footer><span>© LITTLE LINKS 2024</span><span>MADE WITH <span class="heart">♥</span> & A LITTLE PERSONALITY</span><a href="#top" id="backTop">BACK TO TOP ↑</a></footer>
 
+  <dialog id="loginDialog">
+    <div class="dialog-header"><div><p class="modal-kicker">WELCOME BACK</p><h2>Admin sign in</h2></div><button class="icon-button" id="closeLogin" aria-label="Close sign in">×</button></div>
+    <p class="login-description">Sign in to make this little space yours.</p>
+    <form id="loginForm"><label>Admin password<input name="password" type="password" autocomplete="current-password" required></label><p class="form-error" id="loginError" role="alert"></p><button class="save-button login-submit" type="submit">Sign in ↗</button></form>
+  </dialog>
   <dialog id="editor">
     <div class="dialog-header"><div><p class="modal-kicker">MAKE IT YOURS</p><h2>Customize your page</h2></div><button class="icon-button" id="closeEditor" aria-label="Close editor">×</button></div>
-    <p class="editor-note">Changes are saved in this browser only. To make them visible to everyone, update the defaults in <code>app.js</code> and redeploy.</p>
+    <p class="editor-note">Changes are published for everyone when you save.</p>
     <form id="editorForm">
       <div class="fields"><label>Name<input name="name" required maxlength="60"></label><label>Handle<input name="handle" required maxlength="40"></label><label class="wide">Bio<textarea name="bio" rows="3" maxlength="180"></textarea></label><label class="wide">Profile image URL<input name="avatar" type="url" placeholder="https://..."></label></div>
+      <div class="editor-section-title"><div><h3>Social profiles</h3><p>Leave a field blank to hide it.</p></div></div><div class="fields" id="socialFields"></div>
       <div class="editor-section-title"><div><h3>Your links</h3><p>Add the places you want people to find.</p></div><button type="button" class="add-button" id="addLink">+ Add link</button></div>
       <div id="linkFields"></div>
-      <div class="editor-actions"><button type="button" class="reset-button" id="resetButton">Reset to default</button><button type="submit" class="save-button">Save changes ↗</button></div>
+      <div class="editor-actions"><button type="button" class="reset-button" id="logoutButton">Sign out</button><button type="submit" class="save-button">Publish changes ↗</button></div>
     </form>
   </dialog>
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
