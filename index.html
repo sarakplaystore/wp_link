@@ -36,6 +36,15 @@
   </main>
   <footer><span>© LITTLE LINKS 2024</span><span>MADE WITH <span class="heart">♥</span> & A LITTLE PERSONALITY</span><a href="#top" id="backTop">BACK TO TOP ↑</a></footer>
 
+  <dialog id="setupDialog" aria-labelledby="setupTitle">
+    <div class="dialog-header"><div><p class="modal-kicker">ONE-TIME SETUP</p><h2 id="setupTitle">Connect your database</h2></div><button class="icon-button" id="closeSetup" aria-label="Close setup">×</button></div>
+    <p class="login-description">Connect Upstash Redis through Vercel so your published changes are saved for everyone.</p>
+    <a class="setup-connect" href="https://vercel.com/marketplace/upstash" target="_blank" rel="noopener noreferrer">Connect Upstash on Vercel ↗</a>
+    <ol class="setup-steps"><li>In Vercel, add Upstash and connect a Redis database to this project and environment.</li><li>In project settings, add <code>ADMIN_PASSWORD</code> and a separate <code>SESSION_SECRET</code> of at least 32 characters.</li><li>Redeploy your project, then return here and check setup.</li></ol>
+    <p class="setup-hint">Vercel may ask you to sign in, approve the integration, or choose a plan. Database credentials stay in Vercel.</p>
+    <p class="form-error" id="setupError" role="status" aria-live="polite"></p>
+    <button class="save-button login-submit" id="checkSetup" type="button">I've finished setup</button>
+  </dialog>
   <dialog id="loginDialog">
     <div class="dialog-header"><div><p class="modal-kicker">WELCOME BACK</p><h2>Admin sign in</h2></div><button class="icon-button" id="closeLogin" aria-label="Close sign in">×</button></div>
     <p class="login-description">Sign in to make this little space yours.</p>
