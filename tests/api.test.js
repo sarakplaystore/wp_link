@@ -47,3 +47,35 @@ test('login attempts are limited', async t => {
   }
   assert.equal(status,429);
 });
+
+test('configuration error returns a setup code without exposing secrets', async t => {
+  const previous = process.env.SESSION_SECRET;
+  delete process.env.SESSION_SECRET;
+  t.after(() => { process.env.SESSION_SECRET = previous; });
+  const server = http.createServer(sessionHandler);
+  await new Promise(resolve => server.listen(0,'127.0.0.1',resolve));
+  t.after(() => server.close());
+  const response = await fetch(`http://127.0.0.1:${server.address().port}/api/session`);
+  assert.equal(response.status,503);
+  assert.deepEqual(await response.json(), {error:'Admin setup is incomplete.',code:'NOT_CONFIGURED'});
+});
+
+test('uses complete Upstash integration credentials and prefers a complete KV pair', async t => {
+  const server = require('../lib/server');
+  const names = ['LOCAL_MEMORY_STORE','UPSTASH_REDIS_REST_URL','UPSTASH_REDIS_REST_TOKEN','KV_REST_API_URL','KV_REST_API_TOKEN'];
+  const previous = Object.fromEntries(names.map(name => [name, process.env[name]]));
+  const originalFetch = global.fetch;
+  t.after(() => { for (const name of names) { if (previous[name] === undefined) delete process.env[name]; else process.env[name] = previous[name]; } global.fetch = originalFetch; });
+  delete process.env.LOCAL_MEMORY_STORE; delete process.env.KV_REST_API_URL; delete process.env.KV_REST_API_TOKEN;
+  process.env.UPSTASH_REDIS_REST_URL='https://upstash.example'; process.env.UPSTASH_REDIS_REST_TOKEN='upstash-token';
+  let request;
+  global.fetch=async (url, options) => { request={url:String(url),...options}; return {ok:true,json:async()=>({result:null})}; };
+  assert.equal(server.configured(),true); await server.getProfile();
+  assert.equal(request.url,'https://upstash.example/'); assert.equal(request.headers.Authorization,'Bearer upstash-token');
+  process.env.KV_REST_API_URL='https://kv.example';
+  await server.getProfile(); assert.equal(request.url,'https://upstash.example/');
+  process.env.KV_REST_API_TOKEN='kv-token';
+  await server.getProfile(); assert.equal(request.url,'https://kv.example/'); assert.equal(request.headers.Authorization,'Bearer kv-token');
+  delete process.env.UPSTASH_REDIS_REST_TOKEN; delete process.env.KV_REST_API_TOKEN;
+  assert.equal(server.configured(),false);
+});

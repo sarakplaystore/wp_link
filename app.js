@@ -39,9 +39,15 @@ function openEditor(){
  $('editor').showModal();
 }
 function toast(message){ $('toast').textContent=message; $('toast').classList.add('visible'); clearTimeout(toast.timer); toast.timer=setTimeout(()=>$('toast').classList.remove('visible'),3500); }
-async function api(url, options={}) { const response=await fetch(url, {cache:'no-store', ...options}); let data; try { data=await response.json(); } catch { throw new Error('The server returned an unexpected response.'); } if (!response.ok) throw new Error(data.error || 'Something went wrong.'); return data; }
+async function api(url, options={}) { const response=await fetch(url, {cache:'no-store', ...options}); let data; try { data=await response.json(); } catch { throw new Error('The server returned an unexpected response.'); } if (!response.ok) { const error=new Error(data.error || 'Something went wrong.'); error.code=data.code; throw error; } return data; }
 async function loadProfile(){ try { const data=await api('/api/profile'); if(data.profile) profile=data.profile; render(); } catch { render(); } }
-$('editButton').addEventListener('click',async()=>{ try { const session=await api('/api/session'); if(session.authenticated) openEditor(); else { $('loginError').textContent=''; $('loginForm').reset(); $('loginDialog').showModal(); } } catch(error){ toast(error.message); } });
+async function beginAdmin(fromSetup=false){
+ try { const session=await api('/api/session'); if(fromSetup) $('setupDialog').close(); if(session.authenticated) { await loadProfile(); openEditor(); } else { $('loginError').textContent=''; $('loginForm').reset(); $('loginDialog').showModal(); } }
+ catch(error){ if(error.code==='NOT_CONFIGURED') { if(fromSetup) $('setupError').textContent='Setup is still incomplete. Check the project environment variables and redeploy.'; else { $('setupError').textContent=''; $('setupDialog').showModal(); } } else if(fromSetup) $('setupError').textContent=error.message; else toast(error.message); }
+}
+$('editButton').addEventListener('click',()=>beginAdmin());
+$('closeSetup').addEventListener('click',()=>$('setupDialog').close());
+$('checkSetup').addEventListener('click',async()=>{ const button=$('checkSetup'); button.disabled=true; $('setupError').textContent=''; try { await beginAdmin(true); } finally { button.disabled=false; } });
 $('closeLogin').addEventListener('click',()=>$('loginDialog').close());
 $('loginForm').addEventListener('submit',async e=>{ e.preventDefault(); const form=e.currentTarget; const button=form.querySelector('button[type=submit]'); button.disabled=true; $('loginError').textContent=''; try { await api('/api/session',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({password:form.elements.password.value})}); form.reset(); $('loginDialog').close(); await loadProfile(); openEditor(); } catch(error){ $('loginError').textContent=error.message; } finally { button.disabled=false; } });
 $('closeEditor').addEventListener('click',()=>$('editor').close()); $('addLink').addEventListener('click',()=>{ if(document.querySelectorAll('.link-edit').length >= 30) return toast('You can add up to 30 links.'); addLinkField(); });
