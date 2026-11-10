@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#f4f3ee" />
+  <meta name="description" content="A little corner of the internet for everything worth sharing." />
+  <title>Little Links — everything in one place</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="/" aria-label="Little Links home"><span class="brand-mark">✳</span> littlelinks<span class="brand-dot">.</span></a>
+    <span class="top-caption">A LITTLE SPACE ON THE INTERNET</span>
+    <button class="edit-trigger" id="editButton"><span>✎</span> Customize page</button>
+  </header>
+
+  <main class="page-shell">
+    <div class="side-note side-note-left"><span>YOUR SPACE, YOUR STORY</span><i></i><span>EST. 2024</span></div>
+    <section class="profile" aria-label="Profile and links">
+      <div class="profile-topline"><span><i class="status-dot"></i> A LITTLE BIT OF EVERYTHING</span><button class="share-button" id="shareButton" aria-label="Share this page" title="Share this page">↗</button></div>
+      <div class="avatar-wrap"><img id="avatar" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=300&h=300&fit=crop&crop=faces" alt="Profile portrait" /><span class="avatar-sparkle">✳</span></div>
+      <p class="eyebrow" id="handle">@heyitsolivia</p>
+      <h1 id="name">Hey, I’m Olivia <span>✳</span></h1>
+      <p class="bio" id="bio">Creative mind, coffee enthusiast, and collector of little moments. Glad you’re here ♡</p>
+      <div class="socials" id="socials" aria-label="Social links"></div>
+      <div class="section-heading"><span>THE GOOD STUFF</span><span>↓</span></div>
+      <div class="links" id="links"></div>
+      <div class="bottom-note"><span>✳</span> Thanks for stopping by <span>✳</span></div>
+    </section>
+    <div class="side-note side-note-right"><span>MADE FOR SHARING</span><i></i><span>SCROLL A LITTLE</span></div>
+  </main>
+  <footer><span>© LITTLE LINKS 2024</span><span>MADE WITH <span class="heart">♥</span> & A LITTLE PERSONALITY</span><a href="#top" id="backTop">BACK TO TOP ↑</a></footer>
+
+  <dialog id="editor">
+    <div class="dialog-header"><div><p class="modal-kicker">MAKE IT YOURS</p><h2>Customize your page</h2></div><button class="icon-button" id="closeEditor" aria-label="Close editor">×</button></div>
+    <p class="editor-note">Changes are saved in this browser only. To make them visible to everyone, update the defaults in <code>app.js</code> and redeploy.</p>
+    <form id="editorForm">
+      <div class="fields"><label>Name<input name="name" required maxlength="60"></label><label>Handle<input name="handle" required maxlength="40"></label><label class="wide">Bio<textarea name="bio" rows="3" maxlength="180"></textarea></label><label class="wide">Profile image URL<input name="avatar" type="url" placeholder="https://..."></label></div>
+      <div class="editor-section-title"><div><h3>Your links</h3><p>Add the places you want people to find.</p></div><button type="button" class="add-button" id="addLink">+ Add link</button></div>
+      <div id="linkFields"></div>
+      <div class="editor-actions"><button type="button" class="reset-button" id="resetButton">Reset to default</button><button type="submit" class="save-button">Save changes ↗</button></div>
+    </form>
+  </dialog>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+</body>
+</html>
